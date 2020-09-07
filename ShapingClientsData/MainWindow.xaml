@@ -11,7 +11,7 @@
         <local:ClientsDataSet x:Key="clientsDataSet"/>
         <CollectionViewSource x:Key="clientViewSource" Source="{Binding Client, Source={StaticResource clientsDataSet}}"/>
     </Window.Resources>
-    <Grid DataContext="{StaticResource clientViewSource}">
+    <Grid DataContext="{StaticResource clientViewSource}" Margin="0,-2,0,2">
 
         <ComboBox  IsEditable="True" Name="comboBox1" FontSize="16" Margin="35,33,0,0" RenderTransformOrigin="0.512,0.5" Height="37" VerticalAlignment="Top" FontFamily="Arial" HorizontalAlignment="Left" Width="195" SelectionChanged="ComboBox_SelectionChanged">
 
@@ -48,16 +48,16 @@
         <Button x:Name="updateButton" Content="Сохранить изменения" Margin="407,33,0,0" VerticalAlignment="Top" Height="37" Background="#FFF3F1F1" BorderBrush="#FFBEDDF0" BorderThickness="2" FontSize="14" Foreground="#FF8498DC" Click="updateButton_Click" HorizontalAlignment="Left" Width="179">
 
         </Button>
-        <Button x:Name="updateButton_Copy" Content="Отметить посещение" Margin="407,164,0,0" VerticalAlignment="Top" Height="102" Background="#FFF3F1F1" BorderBrush="#FFBEDDF0" BorderThickness="2" FontSize="22" Foreground="#FF8498DC" Click="updateButton_Copy_Click" HorizontalAlignment="Left" Width="229"/>
-        <ListBox x:Name="listBox" HorizontalAlignment="Right" Margin="0,83,511,235" Width="130" BorderBrush="#FF535050"/>
-        <ListBox x:Name="listBoxDate" HorizontalAlignment="Right" Margin="0,83,404,235" Width="108" BorderBrush="#FF535050"/>
+        <Button x:Name="updateButton_Copy" Content="Отметить посещение" Margin="407,146,0,0" VerticalAlignment="Top" Height="102" Background="#FFF3F1F1" BorderBrush="#FFBEDDF0" BorderThickness="2" FontSize="22" Foreground="#FF8498DC" Click="updateButton_Copy_Click" HorizontalAlignment="Left" Width="229"/>
+        <ListBox x:Name="listBox" HorizontalAlignment="Right" Margin="0,83,445,0" Width="170" BorderBrush="#FF535050" Height="165" VerticalAlignment="Top"/>
+        <ListBox x:Name="listBoxDate" HorizontalAlignment="Right" Margin="0,83,338,0" Width="108" BorderBrush="#FF535050" Height="165" VerticalAlignment="Top"/>
         <Button x:Name="undoButton" Content="Отменить изменения" Margin="407,83,0,0" VerticalAlignment="Top" Height="37" Background="#FFF3F1F1" BorderBrush="#FFBEDDF0" BorderThickness="2" FontSize="14" Foreground="#FF8498DC" Click="undoButton__Click" HorizontalAlignment="Left" Width="179" />
-        <ListBox x:Name="listBoxExpired" HorizontalAlignment="Right" Margin="0,83,270,235" Width="125"/>
-        <ListBox x:Name="listBox2" HorizontalAlignment="Right" Margin="0,83,170,235" Width="100"/>
-        <DataGrid x:Name="clientDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" Height="200" ItemsSource="{Binding}" Margin="407,0,43,7" RowDetailsVisibilityMode="VisibleWhenSelected" VerticalAlignment="Bottom" d:LayoutOverrides="Height" LoadingRow="ClientDataGrid_LoadingRow">
+        <ListBox x:Name="listBoxExpired" HorizontalAlignment="Right" Margin="0,83,150,0" Width="170" Height="165" VerticalAlignment="Top"/>
+        <ListBox x:Name="listBox2" HorizontalAlignment="Right" Margin="0,83,52,0" Width="100" Height="165" VerticalAlignment="Top"/>
+        <DataGrid x:Name="clientDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="407,289,43,7" RowDetailsVisibilityMode="VisibleWhenSelected" LoadingRow="ClientDataGrid_LoadingRow">
             <DataGrid.Columns>
                 <!--<DataGridTextColumn x:Name="idColumn" Binding="{Binding Id}" Header="Id" IsReadOnly="True" Width="SizeToHeader"/>-->
-                <DataGridTextColumn x:Name="surnamesColumn" Binding="{Binding Surnames}" Header="Фамилия" Width="SizeToHeader"/>
+                <DataGridTextColumn x:Name="surnamesColumn" Binding="{Binding Surnames}" Header="Фамилия                       " Width="SizeToHeader"/>
                 <DataGridTextColumn x:Name="visitsLeftColumn" Binding="{Binding VisitsLeft}" Header="Осталось занятий" Width="SizeToHeader"/>
                 <DataGridTextColumn x:Name="lastCheckDateColumn" Binding="{Binding LastCheckDate}" Header="Последнее посещение" Width="SizeToHeader"/>
                 <DataGridTextColumn x:Name="expiredDateColumn" Binding="{Binding ExpiredDate}" Header="Заканчивается абонимент" Width="SizeToHeader"/>
@@ -67,11 +67,11 @@
                 <DataGridTextColumn x:Name="commentColumn" Binding="{Binding Comment}" Header="Комментарий" Width="SizeToHeader"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Label x:Name="label1" Content="Дни рождения в ближайшие дни&#xD;&#xA;" HorizontalAlignment="Right" Margin="0,37,404,0" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment" Width="237" FontSize="14" Height="33"/>
-        <Label x:Name="label1_Copy" Content="Абонимент заканчивается &#xD;&#xA;         в ближайшие дни&#xA;" HorizontalAlignment="Right" Margin="0,30,141,0" VerticalAlignment="Top" Width="237" FontSize="14" d:LayoutOverrides="HorizontalAlignment" Height="46"/>
+        <Label x:Name="label1" Content="Дни рождения в ближайшие дни&#xD;&#xA;" HorizontalAlignment="Right" Margin="0,37,338,0" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment" Width="237" FontSize="14" Height="33"/>
+        <Label x:Name="label1_Copy" Content="Абонимент заканчивается &#xD;&#xA;         в ближайшие дни&#xA;" HorizontalAlignment="Right" Margin="0,30,23,0" VerticalAlignment="Top" Width="237" FontSize="14" d:LayoutOverrides="HorizontalAlignment" Height="46"/>
         <Label x:Name="labelСhanges" Content="Изменения сохранены" HorizontalAlignment="Left" Margin="433,7,0,0" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment"/>
-        <Label x:Name="label2" Content="Всего клиентов" HorizontalAlignment="Left" Margin="407,0,0,212" VerticalAlignment="Bottom" Height="36" Width="130" FontSize="16"/>
-        <Label x:Name="labelNomberOfClients" Content="Label" HorizontalAlignment="Left" Margin="542,0,0,209" VerticalAlignment="Bottom" Height="39" Width="49" FontSize="16"/>
+        <Label x:Name="label2" Content="Всего клиентов" HorizontalAlignment="Left" Margin="407,253,0,0" Width="130" FontSize="16" Height="36" VerticalAlignment="Top"/>
+        <Label x:Name="labelNomberOfClients" Content="Label" HorizontalAlignment="Left" Margin="542,253,0,0" Width="49" FontSize="16" Height="39" VerticalAlignment="Top"/>
         <TextBox x:Name="textBoxPhoneSearch" HorizontalAlignment="Right" Height="26" Margin="0,11,511,0" TextWrapping="Wrap" Text="375xxxxxxxxx" VerticalAlignment="Top" Width="130" FontSize="14"/>
         <Button x:Name="searchButton" Content="Поиск по номеру телефона" Margin="0,11,285,0" VerticalAlignment="Top" Height="26" Background="#FFF3F1F1" BorderBrush="#FFBEDDF0" BorderThickness="2" FontSize="14" Foreground="#FF8498DC"  HorizontalAlignment="Right" Width="223" Click="searchButton_Click"/>
 

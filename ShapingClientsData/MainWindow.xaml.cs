@@ -18,6 +18,8 @@ using System.Data;
 using System.Windows.Forms;
 using System.Data.Linq;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
+
 
 namespace ShapingClientsData
 {
@@ -197,6 +199,7 @@ namespace ShapingClientsData
 
         private void RegisterOneVisit()
         {
+            
             int remained = Convert.ToInt32(textBox.Text);
             if (remained > 0)
             {
@@ -384,6 +387,12 @@ namespace ShapingClientsData
                 {
                     e.Cancel = true;
                 }
+            }
+            else
+            {
+                var p = new Process();
+                p.StartInfo.FileName = "ConsoleApp1.exe";  // just for example, you can use yours.
+                p.Start();
             }
         }
 
