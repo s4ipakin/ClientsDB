@@ -56,7 +56,7 @@
         <ListBox x:Name="listBox2" HorizontalAlignment="Right" Margin="0,83,52,0" Width="100" Height="165" VerticalAlignment="Top"/>
         <DataGrid x:Name="clientDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="407,289,43,7" RowDetailsVisibilityMode="VisibleWhenSelected" LoadingRow="ClientDataGrid_LoadingRow">
             <DataGrid.Columns>
-                <!--<DataGridTextColumn x:Name="idColumn" Binding="{Binding Id}" Header="Id" IsReadOnly="True" Width="SizeToHeader"/>-->
+                <DataGridTextColumn x:Name="idColumn" Binding="{Binding Id}" Header="     Id     " IsReadOnly="True" Width="SizeToHeader"/>
                 <DataGridTextColumn x:Name="surnamesColumn" Binding="{Binding Surnames}" Header="Фамилия                       " Width="SizeToHeader"/>
                 <DataGridTextColumn x:Name="visitsLeftColumn" Binding="{Binding VisitsLeft}" Header="Осталось занятий" Width="SizeToHeader"/>
                 <DataGridTextColumn x:Name="lastCheckDateColumn" Binding="{Binding LastCheckDate}" Header="Последнее посещение" Width="SizeToHeader"/>
