@@ -40,6 +40,7 @@ namespace ShapingClientsData
         List<object> LastSavedData = new List<object>();
         List<object> InputFields;
         bool addingClients;
+        bool changed = false;
         int nomberOfClients = 0;
         DatabaseHandler databaseHandler;
         enum Mounths
@@ -57,8 +58,14 @@ namespace ShapingClientsData
             ноября,
             декабря
         }
+        
+        private int tabSelectedIndex;
+
+
+
         public MainWindow()
         {
+            
             InitializeComponent();
             clientDataGrid.ItemsSource = null;
             clientDataGrid.ItemsSource = clientsTable.DefaultView;
@@ -199,49 +206,58 @@ namespace ShapingClientsData
 
         private void RegisterOneVisit()
         {
-            
-            int remained = Convert.ToInt32(textBox.Text);
-            if (remained > 0)
+            if (textBox.Text != "")
             {
-                remained--;
-                try
+                int remained = Convert.ToInt32(textBox.Text);
+                if (remained > 0)
                 {
-                    if (lastVisitDate.SelectedDate == DateTime.Today)
+                    remained--;
+                    try
                     {
-                        DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Сегодня уже есть отмечанное посещение. Все равно отметить?",
-                        "Повторное", MessageBoxButtons.YesNo);
-                        if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+                        if (lastVisitDate.SelectedDate == DateTime.Today)
                         {
-                            databaseHandler.UpdateItemInDB("Client", "VisitsLeft", selectedId, remained);
+                            DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Сегодня уже есть отмечанное посещение. Все равно отметить?",
+                            "Повторное", MessageBoxButtons.YesNo);
+                            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+                            {
+                                //databaseHandler.UpdateItemInDB("Client", "VisitsLeft", selectedId, remained);
+                                //System.Windows.MessageBox.Show(remained.ToString());
+                                textBox.Text = remained.ToString();
+                            }
                         }
-                    }
-                    else
-                    {
-                        DatabaseHandler databaseHandler = new DatabaseHandler(connectionString);
-                        databaseHandler.SetConnection();
-                        databaseHandler.UpdateItemInDB("Client", "VisitsLeft", selectedId, remained);
-                        databaseHandler.UpdateItemInDB("Client", "LastCheckDate", selectedId, DateTime.Today);
-                    }
+                        else
+                        {
+                            //DatabaseHandler databaseHandler = new DatabaseHandler(connectionString);
+                            //databaseHandler.SetConnection();
+                            //databaseHandler.UpdateItemInDB("Client", "VisitsLeft", selectedId, remained);
+                            //databaseHandler.UpdateItemInDB("Client", "LastCheckDate", selectedId, DateTime.Today);
+                            textBox.Text = remained.ToString();
+                            lastVisitDate.SelectedDate = DateTime.Today;
+                        }
 
-                }
-                catch (Exception ex)
-                {
-                    System.Windows.Forms.MessageBox.Show(ex.ToString());
-                }
-                finally
-                {
-                    UpdateTab();
-                    ShowClients();
-                    ShowClientData();
-                    lastCheckSaved = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.ToString());
+                    }
+                    finally
+                    {
+                        //UpdateTab();
+                        //ShowClients();
+                        //ShowClientData();
+                        Update();
+                        lastCheckSaved = true;
+                    }
                 }
             }
+            
         }
 
         private void CheckForChanges()
         {
             if (!(saved && lastCheckSaved))
             {
+                changed = true;
                 DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Сохранить изменения клиента " + comboBox1.SelectedItem + "?",
                       "Сохранение", MessageBoxButtons.YesNo);
                 if (dialogResult == System.Windows.Forms.DialogResult.Yes)
@@ -258,11 +274,19 @@ namespace ShapingClientsData
 
         private void ListBoxSelected(System.Windows.Controls.ListBox listBox)
         {
+            string clientName = "";
+            try
+            {
+                clientName = listBox.SelectedItem.ToString().Split('|')[0];
+                clientName = clientName.Substring(0, clientName.Length - 1);
+            }
+            catch (Exception ex) { }
             for (int i = 0; i < comboBox1.Items.Count; i++)
             {
                 try
                 {
-                    if (listBox.SelectedItem.ToString() == comboBox1.Items[i].ToString())
+                    
+                    if (/*listBox.SelectedItem.ToString()*/clientName == comboBox1.Items[i].ToString())
                     {
                         comboBox1.SelectedIndex = i;
                         break;
@@ -388,9 +412,10 @@ namespace ShapingClientsData
                     e.Cancel = true;
                 }
             }
-            else
+            else if (changed)
             {
                 var p = new Process();
+                //System.Windows.MessageBox.Show("пытается гит");
                 p.StartInfo.FileName = "ConsoleApp1.exe";  // just for example, you can use yours.
                 p.Start();
             }
@@ -478,7 +503,7 @@ namespace ShapingClientsData
             dates.Items.Clear();
             foreach (DataRowView row in view)
             {
-                surnames.Items.Add(row["Surname"]);
+                surnames.Items.Add(row["Surname"] + " | " + row[dateColumn].ToString());
                 dates.Items.Add(row[dateColumn]);
             }
             
@@ -490,7 +515,7 @@ namespace ShapingClientsData
             {
                 System.DateTime targetDate = Convert.ToDateTime(date);
                 if ((targetDate.DayOfYear == DateTime.Today.DayOfYear)|| ((targetDate.Month == DateTime.Today.Month)&&(targetDate.Day == DateTime.Today.Day))||
-                    ((targetDate.DayOfYear > DateTime.Today.DayOfYear)&&((targetDate.DayOfYear - DateTime.Today.DayOfYear) < 4)))
+                    ((targetDate.DayOfYear > DateTime.Today.DayOfYear)&&((targetDate.DayOfYear - DateTime.Today.DayOfYear) < 8)))
                 {
                     var mounth = (Mounths)targetDate.Month - 1;
                     string dayAndMounth = targetDate.Day.ToString() +" " + mounth.ToString();
@@ -540,6 +565,7 @@ namespace ShapingClientsData
         private void AnyChange()
         {
             saved = false;
+            changed = true;
             labelСhanges.Visibility = Visibility.Hidden;
         }
         private void Update()
@@ -594,6 +620,33 @@ namespace ShapingClientsData
             }
         }
 
-        
+        private void clientDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            tabSelectedIndex = clientDataGrid.SelectedIndex;
+            //System.Windows.MessageBox.Show(clientsTable.Rows[tabSelectedIndex]["Surnames"].ToString());
+            DataRowView dataRow;
+            //int index = clientDataGrid.CurrentCell.Column.DisplayIndex;
+            string cellValue = "";
+            //System.Windows.MessageBox.Show(cellValue.ToString());
+            try
+            {
+                dataRow = (DataRowView)clientDataGrid.SelectedItem;
+                cellValue = dataRow.Row.ItemArray[1].ToString();
+            }
+            catch (Exception ex) { }
+            for (int i = 0; i < comboBox1.Items.Count; i++)
+            {
+                try
+                {
+                    if (cellValue == comboBox1.Items[i].ToString())
+                    {
+                        comboBox1.SelectedIndex = i;
+                        break;
+                    }
+                }
+                catch (Exception ex) { break; }
+
+            }
+        }
     }
 }

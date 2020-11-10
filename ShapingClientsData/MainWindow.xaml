@@ -10,6 +10,38 @@
     <Window.Resources>
         <local:ClientsDataSet x:Key="clientsDataSet"/>
         <CollectionViewSource x:Key="clientViewSource" Source="{Binding Client, Source={StaticResource clientsDataSet}}"/>
+        <Style x:Key="ItemContStyle" TargetType="{x:Type DataGridRow}">
+            <Style.Resources>
+                <LinearGradientBrush x:Key="ProfitBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Offset="0.1" Color="#FFC8ECFD" />
+                    <GradientStop Offset="0.8" Color="#FFC8ECFD" />
+                </LinearGradientBrush>
+                <LinearGradientBrush x:Key="LossBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Offset="0.1" Color="#FFF989F9" />
+                    <GradientStop Offset="0.8" Color="#FFF989F9" />
+                </LinearGradientBrush>
+                <!--  Reduces a customer's Balance to either -1, 0, or +1  -->
+                <local:EntryTypetoValueConverter x:Key="PolarValueConv" />
+            </Style.Resources>
+
+            <!--
+                Stretch the content so that we can right-align values
+                in the Balance column.
+            -->
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+
+            <Style.Triggers>
+                <!--  When a customer owes money, color them green.  -->
+                <DataTrigger Binding="{Binding VisitsLeft, Converter={StaticResource PolarValueConv}}" Value="1">
+                    <Setter Property="Background" Value="{StaticResource ProfitBrush}" />
+                </DataTrigger>
+                <!--  When a customer is owed money, color them red.  -->
+                <DataTrigger Binding="{Binding VisitsLeft, Converter={StaticResource PolarValueConv}}" Value="0">
+                    <Setter Property="Background" Value="{StaticResource LossBrush}" />
+                </DataTrigger>
+
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Grid DataContext="{StaticResource clientViewSource}" Margin="0,-2,0,2">
 
@@ -49,12 +81,20 @@
 
         </Button>
         <Button x:Name="updateButton_Copy" Content="Отметить посещение" Margin="407,146,0,0" VerticalAlignment="Top" Height="102" Background="#FFF3F1F1" BorderBrush="#FFBEDDF0" BorderThickness="2" FontSize="22" Foreground="#FF8498DC" Click="updateButton_Copy_Click" HorizontalAlignment="Left" Width="229"/>
-        <ListBox x:Name="listBox" HorizontalAlignment="Right" Margin="0,83,445,0" Width="170" BorderBrush="#FF535050" Height="165" VerticalAlignment="Top"/>
-        <ListBox x:Name="listBoxDate" HorizontalAlignment="Right" Margin="0,83,338,0" Width="108" BorderBrush="#FF535050" Height="165" VerticalAlignment="Top"/>
+        <ListBox x:Name="listBox" HorizontalAlignment="Right" Margin="0,83,364,0" Width="251" BorderBrush="#FF535050" Height="165" VerticalAlignment="Top"/>
+        <ListBox x:Name="listBoxDate" Visibility="Hidden" HorizontalAlignment="Right" Margin="0,83,338,0" Width="108" BorderBrush="#FF535050" Height="165" VerticalAlignment="Top"/>
         <Button x:Name="undoButton" Content="Отменить изменения" Margin="407,83,0,0" VerticalAlignment="Top" Height="37" Background="#FFF3F1F1" BorderBrush="#FFBEDDF0" BorderThickness="2" FontSize="14" Foreground="#FF8498DC" Click="undoButton__Click" HorizontalAlignment="Left" Width="179" />
-        <ListBox x:Name="listBoxExpired" HorizontalAlignment="Right" Margin="0,83,150,0" Width="170" Height="165" VerticalAlignment="Top"/>
-        <ListBox x:Name="listBox2" HorizontalAlignment="Right" Margin="0,83,52,0" Width="100" Height="165" VerticalAlignment="Top"/>
-        <DataGrid x:Name="clientDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="407,289,43,7" RowDetailsVisibilityMode="VisibleWhenSelected" LoadingRow="ClientDataGrid_LoadingRow">
+        <ListBox x:Name="listBoxExpired" HorizontalAlignment="Right" Margin="0,83,71,0" Width="249" Height="165" VerticalAlignment="Top"/>
+        <ListBox x:Name="listBox2" Visibility="Hidden" HorizontalAlignment="Right" Margin="0,83,52,0" Width="100" Height="165" VerticalAlignment="Top"/>
+        <DataGrid x:Name="clientDataGrid" 
+                  AutoGenerateColumns="False" 
+                  EnableRowVirtualization="True" 
+                  ItemsSource="{Binding}" 
+                  Margin="407,289,43,7" 
+                  RowDetailsVisibilityMode="VisibleWhenSelected" 
+                  LoadingRow="ClientDataGrid_LoadingRow" 
+                  
+                  ItemContainerStyle="{StaticResource ItemContStyle}" SelectionChanged="clientDataGrid_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="idColumn" Binding="{Binding Id}" Header="     Id     " IsReadOnly="True" Width="SizeToHeader"/>
                 <DataGridTextColumn x:Name="surnamesColumn" Binding="{Binding Surnames}" Header="Фамилия                       " Width="SizeToHeader"/>

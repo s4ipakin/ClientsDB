@@ -101,6 +101,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClientsDataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="EntryTypetoValueConverter.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
